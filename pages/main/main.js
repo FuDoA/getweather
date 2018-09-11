@@ -1,52 +1,52 @@
 const app = getApp()
-var QQMapWX = require('../../utils/qqmap-wx-jssdk.min.js');
 var city = ''
 var district=''
-var weatherdata=[]
 Page({
   data:{
     userlongitude:'',
     userlatitude:'',
     gotlocation:false,
     weatherdata:[],
-    district:'未知'
+    city:'未知',
+    district:'',
+    data:[]
   },
   onLoad:function(){
-    var qqmapsdk = new QQMapWX({
-      key: 'JIMBZ-YE36G-FYXQ4-IQ3YB-C3NG2-KIBCU'
-    }); 
+    
+  
+  },
+  onShow:function(){
+  
     var that = this
     wx.getLocation({
       success: function(res) {
         that.setData({
           userlatitude: res.latitude,
-          userlongitude: res.longitude
+          userlongitude: res.longitude,
+          userlocation: res.longitude + "," + res.latitude
         });
-        qqmapsdk.reverseGeocoder({
-          location: {
-            latitude: res.latitude,
-            longitude: res.longitude
+        var locationString = res.longitude + "," + res.latitude;
+        wx.request({
+          url: 'https://free-api.heweather.com/s6/weather/now',
+          data: {
+            "location":locationString,
+            "key": "7372b077b6ba443c9643b96f22d88207"
           },
+          method: 'GET',
           success: function (res1) {
-          var district = res1.result.address_component.district
-          var city = res1.result.address_component.city 
-          that.setData({
-            district:district
-          });
-          wx.request({
-            url: 'http://wthrcdn.etouch.cn/weather_mini?city='+district,
-            success:function(res2){
-              weatherdata = JSON.parse(res2)
-              thie.setData({
-                weatherdata: weatherdata,
-                gotlocation: true
-              }); 
-            }
+            that.setData({
+              weatherdata: res1.data.HeWeather6[0].now,
+              city: res1.data.HeWeather6[0].basic.parent_city,
+              district: res1.data.HeWeather6[0].basic.location,
+              gotweather:true
+            });
+            
 
-          });
-          }          
+
+          }
         });
+                  
       }
-    });
+    })
   }
 })

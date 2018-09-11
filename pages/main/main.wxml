@@ -1,15 +1,11 @@
 
 <text>经度：{{userlongitude}}</text>
 <text>纬度：{{userlatitude}}</text>
-<text>所在地：{{district}}</text>
-<view class='weather' wx:if='{{gotlocation==true}}'>
+<text>所在地：{{city}}{{district}}</text>
+<view class='weather' wx:if='{{gotweather}}'>
   <view class='weather_today'>
-    <text>{{weatherdata.data.forecast[0].date}}</text>
-    <text>{{weatherdata.data.forecast[0].type}}</text>
-    <text>{{weatherdata.data.forecast[0].high}}</text>
-    <text>{{weatherdata.data.forecast[0].low}}</text>
-    <text>{{weatherdata.data.forecast[0].fengli}}</text>
-    <text>{{weatherdata.data.forecast[0].fengxiang}}</text>
+    <text>今日天气：{{weatherdata.cond_txt}}当前气温：{{weatherdata.tmp}}度</text>
+ 
   </view>
 
   <view class='weather_tomorrow'>
